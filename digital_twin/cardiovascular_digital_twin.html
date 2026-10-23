@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cardiovascular Digital Twin: The Sound Heart Simulation</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .heart-glow {
+      filter: drop-shadow(0 0 15px currentColor);
+      transition: transform 0.15s ease-out, filter 0.3s ease;
+    }
+    .needle-transition {
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans p-4 md:p-6 min-h-screen">
+
+  <!-- Main Container -->
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-slate-800 pb-4 gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+          <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            🫀 In-Silico Cardiovascular Digital Twin
+          </h1>
+          <span class="bg-emerald-950 text-emerald-400 text-xs px-2.5 py-0.5 rounded-full border border-emerald-800 font-mono">
+            LIVE TELEMETRY
+          </span>
+        </div>
+        <p class="text-sm text-slate-400 mt-1">
+          Differential Pacemaker Model: Real-Time Autonomic & Hemodynamic Response to Acoustic & Kinesthetic Stimuli
+        </p>
+      </div>
+
+      <!-- Age Slider & Subject Config -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 flex items-center gap-4 w-full md:w-auto">
+        <div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1">
+            <span>Participant Age:</span>
+            <span id="ageDisplay" class="font-bold text-emerald-400 font-mono">35 Years</span>
+          </div>
+          <input type="range" id="ageSlider" min="18" max="75" value="35" class="w-44 accent-emerald-500 cursor-pointer">
+        </div>
+        <div class="border-l border-slate-800 pl-4 text-xs font-mono text-slate-400">
+          <div>Elasticity: <span id="elasticityDisplay" class="text-white font-bold">0.83</span></div>
+          <div>Baseline: <span id="baseHrDisplay" class="text-white font-bold">71.0 bpm</span></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Condition Selector Buttons -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <button onclick="setCondition('quran')" id="btn-quran" class="cond-btn border-2 border-emerald-500 bg-emerald-950/40 text-emerald-300 p-3.5 rounded-xl text-left transition-all hover:bg-emerald-900/50 shadow-lg shadow-emerald-950/50">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400">Condition 1</span>
+          <span class="text-lg">📖</span>
+        </div>
+        <div class="font-bold text-base mt-1 text-white">Qur'an Recitation</div>
+        <div class="text-xs text-emerald-400/80 mt-0.5">0.10 Hz Mayer Wave Harmonic</div>
+      </button>
+
+      <button onclick="setCondition('music')" id="btn-music" class="cond-btn border border-slate-800 bg-slate-900/60 text-slate-400 p-3.5 rounded-xl text-left transition-all hover:border-red-500/50 hover:bg-slate-900">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider font-semibold text-red-400">Condition 2</span>
+          <span class="text-lg">🎵</span>
+        </div>
+        <div class="font-bold text-base mt-1 text-slate-200">Pop Music</div>
+        <div class="text-xs text-slate-500 mt-0.5">High Acoustic Transients (>120 BPM)</div>
+      </button>
+
+      <button onclick="setCondition('salah')" id="btn-salah" class="cond-btn border border-slate-800 bg-slate-900/60 text-slate-400 p-3.5 rounded-xl text-left transition-all hover:border-blue-500/50 hover:bg-slate-900">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider font-semibold text-blue-400">Condition 3</span>
+          <span class="text-lg">🤲</span>
+        </div>
+        <div class="font-bold text-base mt-1 text-slate-200">Salah (Prayer)</div>
+        <div class="text-xs text-slate-500 mt-0.5">Kinetic Tilt & Baroreflex (Sujud)</div>
+      </button>
+
+      <button onclick="setCondition('tv')" id="btn-tv" class="cond-btn border border-slate-800 bg-slate-900/60 text-slate-400 p-3.5 rounded-xl text-left transition-all hover:border-slate-500/50 hover:bg-slate-900">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Condition 4</span>
+          <span class="text-lg">📺</span>
+        </div>
+        <div class="font-bold text-base mt-1 text-slate-200">Sedentary TV</div>
+        <div class="text-xs text-slate-500 mt-0.5">Passive Baseline Control</div>
+      </button>
+    </div>
+
+    <!-- Salah Sub-Controls (Only visible when Salah is active) -->
+    <div id="salahSubControls" class="hidden bg-blue-950/30 border border-blue-900/60 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Prayer Posture Stage:</span>
+        <span id="postureTitle" class="text-sm font-bold text-white bg-blue-900/60 px-2.5 py-0.5 rounded">Standing (0°)</span>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="setSalahPosture('standing', 0)" class="posture-btn px-3 py-1 text-xs rounded-lg font-semibold bg-blue-600 text-white shadow">Standing (0°)</button>
+        <button onclick="setSalahPosture('ruku', 90)" class="posture-btn px-3 py-1 text-xs rounded-lg font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Bowing / Ruku (90°)</button>
+        <button onclick="setSalahPosture('sujud', 180)" class="posture-btn px-3 py-1 text-xs rounded-lg font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Prostration / Sujud (180°)</button>
+      </div>
+    </div>
+
+    <!-- Main Live Simulation Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT: Live Beating Heart & Gauges (5 Cols) -->
+      <div class="lg:col-span-5 space-y-4">
+
+        <!-- Pulsing Heart Chamber Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center relative overflow-hidden flex flex-col items-center justify-center min-h-[310px]">
+          <div class="absolute top-4 left-4 text-xs font-mono text-slate-400 uppercase tracking-wider">
+            Cardiac Contraction State
+          </div>
+          <div class="absolute top-4 right-4">
+            <span id="hrBadge" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-sm font-mono font-bold px-3 py-1 rounded-full">
+              66.8 BPM
+            </span>
+          </div>
+
+          <!-- Anatomical SVG Heart with Live Dynamic Contraction -->
+          <div class="my-auto py-4">
+            <svg id="heartSvg" class="w-36 h-36 heart-glow text-emerald-500 mx-auto" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <div id="heartStateSubtext" class="text-sm font-semibold text-emerald-400 mt-3 font-mono">
+              Resonant Sine Contraction (0.1 Hz)
+            </div>
+            <div id="strokeVolumeText" class="text-xs text-slate-400 mt-0.5">
+              High Ejection Elasticity • RSA Synchronized
+            </div>
+          </div>
+        </div>
+
+        <!-- Autonomic Nervous System Gauges (Vagus vs Sympathetic) -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Vagus Brake Dial -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+            <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wide">Vagus Brake (Calm)</div>
+            <div class="relative w-28 h-16 mx-auto mt-2 overflow-hidden">
+              <div class="absolute inset-0 rounded-t-full border-8 border-slate-800 border-b-0"></div>
+              <div id="vagusArc" class="absolute inset-0 rounded-t-full border-8 border-emerald-500 border-b-0" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);"></div>
+              <div id="vagusNeedle" class="absolute bottom-0 left-1/2 w-1 h-12 bg-white origin-bottom -translate-x-1/2 needle-transition" style="transform: rotate(45deg);"></div>
+            </div>
+            <div id="vagusScore" class="text-lg font-bold text-white font-mono mt-1">88.5%</div>
+            <div class="text-[11px] text-slate-400">High Parasympathetic Tone</div>
+          </div>
+
+          <!-- Sympathetic Accelerator Dial -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center">
+            <div class="text-xs font-semibold text-red-400 uppercase tracking-wide">Sympathetic (Stress)</div>
+            <div class="relative w-28 h-16 mx-auto mt-2 overflow-hidden">
+              <div class="absolute inset-0 rounded-t-full border-8 border-slate-800 border-b-0"></div>
+              <div id="sympArc" class="absolute inset-0 rounded-t-full border-8 border-red-500 border-b-0"></div>
+              <div id="sympNeedle" class="absolute bottom-0 left-1/2 w-1 h-12 bg-white origin-bottom -translate-x-1/2 needle-transition" style="transform: rotate(-65deg);"></div>
+            </div>
+            <div id="sympScore" class="text-lg font-bold text-white font-mono mt-1">18.2%</div>
+            <div class="text-[11px] text-slate-400">Low Adrenaline Demand</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Live ECG Oscilloscope & Telemetry Charts (7 Cols) -->
+      <div class="lg:col-span-7 space-y-4">
+
+        <!-- Live ECG Canvas Strip -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 relative">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+              <span class="text-xs font-mono font-bold tracking-wider text-slate-300 uppercase">
+                Continuous Telemetry: Lead II Electrocardiogram (1000 Hz)
+              </span>
+            </div>
+            <span class="text-xs font-mono text-emerald-400">Sweep: 25 mm/s</span>
+          </div>
+
+          <!-- Canvas Screen -->
+          <div class="relative bg-black rounded-xl border border-slate-800 overflow-hidden shadow-inner">
+            <canvas id="ecgCanvas" width="620" height="190" class="w-full h-48 block"></canvas>
+            <div class="absolute bottom-2 right-3 font-mono text-[10px] text-emerald-500/80">
+              GAIN: 10mm/mV • FILTER: 0.5-45Hz
+            </div>
+          </div>
+
+          <!-- Telemetry Data Strips -->
+          <div class="grid grid-cols-4 gap-2 mt-4 pt-4 border-t border-slate-800 text-center font-mono">
+            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80">
+              <div class="text-[11px] text-slate-400">Mean HR</div>
+              <div id="statHr" class="text-base font-bold text-white">67.1 <span class="text-[10px] font-normal text-slate-400">bpm</span></div>
+            </div>
+            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80">
+              <div class="text-[11px] text-slate-400">RMSSD</div>
+              <div id="statRmssd" class="text-base font-bold text-emerald-400">11.8 <span class="text-[10px] font-normal text-slate-400">ms</span></div>
+            </div>
+            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80">
+              <div class="text-[11px] text-slate-400">0.1 Hz Coherence</div>
+              <div id="statCoh" class="text-base font-bold text-emerald-400">0.742</div>
+            </div>
+            <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80">
+              <div class="text-[11px] text-slate-400">Baro Tilt Angle</div>
+              <div id="statTilt" class="text-base font-bold text-slate-300">0°</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scientific Real-Time Biological Mechanism Box -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
+            <span>🔬 Active Biophysical Mechanism:</span>
+            <span id="mechTitle" class="text-emerald-400">Mayer-Wave Resonance Locking</span>
+          </div>
+          <p id="mechDesc" class="text-xs text-slate-300 leading-relaxed">
+            Slow, harmonic Tartil recitation (~0.10 Hz acoustic envelope) perfectly entrains respiratory sinus arrhythmia (RSA) into phase with the 10-second baroreceptor blood pressure wave. This maximizes cardiac vagal output and stabilizes beat-to-beat variability.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    // State variables
+    let currentCondition = 'quran';
+    let currentAge = 35;
+    let salahPosture = 'standing';
+    let currentTilt = 0;
+    let baseHeartRate = 71.0;
+    let currentBpm = 67.0;
+    let elasticity = 0.835;
+
+    // Condition Configurations
+    const conditions = {
+      quran: {
+        name: "Qur'an (Harmonic)",
+        color: "#10b981", // Emerald
+        bgColor: "bg-emerald-500",
+        borderColor: "border-emerald-500",
+        hrOffset: -4.5,
+        vagalFactor: 0.92,
+        sympFactor: 0.15,
+        rmssdBase: 12.2,
+        cohBase: 0.745,
+        mechTitle: "Mayer-Wave Resonance Locking (0.10 Hz)",
+        mechDesc: "Slow rhythmic Tartil recitation (~0.10 Hz acoustic envelope) entrains respiratory sinus arrhythmia (RSA) into phase with the intrinsic Mayer baroreceptor wave. This delivers maximum vagal efficiency, lowering resting cardiac workload.",
+        pulseType: "smooth-sine"
+      },
+      music: {
+        name: "Pop Music (Transient)",
+        color: "#ef4444", // Red
+        bgColor: "bg-red-500",
+        borderColor: "border-red-500",
+        hrOffset: +7.5,
+        vagalFactor: 0.22,
+        sympFactor: 0.85,
+        rmssdBase: 8.8,
+        cohBase: 0.005,
+        mechTitle: "Acoustic Transient Sympathetic Arousal",
+        mechDesc: "Fast percussion transients and rapid syncopation (>120 BPM) inhibit the vagal brake and trigger sympathetic autonomic outflow, increasing adrenaline demand and generating erratic, chaotic beat intervals.",
+        pulseType: "erratic-fast"
+      },
+      salah: {
+        name: "Salah (Kinesthetic)",
+        color: "#3b82f6", // Blue
+        bgColor: "bg-blue-500",
+        borderColor: "border-blue-500",
+        hrOffset: -6.0,
+        vagalFactor: 0.82,
+        sympFactor: 0.25,
+        rmssdBase: 11.4,
+        cohBase: 0.380,
+        mechTitle: "Hydrostatic Baroreceptor Reflex (Sujud)",
+        mechDesc: "Body inversion during Sujud (180° tilt) increases hydrostatic venous return to the carotid sinus and aortic arch. Mechanoreceptors immediately fire vagal signals to decelerate the Sinoatrial node, preventing cranial overpressure.",
+        pulseType: "baro-adaptive"
+      },
+      tv: {
+        name: "Passive TV (Sedentary)",
+        color: "#94a3b8", // Slate
+        bgColor: "bg-slate-500",
+        borderColor: "border-slate-500",
+        hrOffset: +1.0,
+        vagalFactor: 0.38,
+        sympFactor: 0.35,
+        rmssdBase: 9.6,
+        cohBase: 0.020,
+        mechTitle: "Sedentary Autonomic Inertia",
+        mechDesc: "Passive screen viewing lacks harmonic frequency entrainment and physical baroreflex engagement, producing a rigid, low-variability cardiac state without therapeutic vagal resonance.",
+        pulseType: "flat-inert"
+      }
+    };
+
+    // Age Slider Listener
+    const ageSlider = document.getElementById('ageSlider');
+    ageSlider.addEventListener('input', (e) => {
+      currentAge = parseInt(e.target.value);
+      document.getElementById('ageDisplay').innerText = `${currentAge} Years`;
+      elasticity = Math.max(0.40, 1.0 - (currentAge - 20) * 0.011);
+      document.getElementById('elasticityDisplay').innerText = elasticity.toFixed(2);
+      updateTelemetry();
+    });
+
+    // Condition Switcher
+    function setCondition(condKey) {
+      currentCondition = condKey;
+      
+      // Update Button Styles
+      document.querySelectorAll('.cond-btn').forEach(btn => {
+        btn.className = "cond-btn border border-slate-800 bg-slate-900/60 text-slate-400 p-3.5 rounded-xl text-left transition-all hover:bg-slate-900";
+      });
+      const activeBtn = document.getElementById(`btn-${condKey}`);
+      const cfg = conditions[condKey];
+      activeBtn.className = `cond-btn border-2 ${cfg.borderColor} bg-slate-900 text-white p-3.5 rounded-xl text-left shadow-lg`;
+
+      // Show/Hide Salah sub-controls
+      const salahDiv = document.getElementById('salahSubControls');
+      if (condKey === 'salah') {
+        salahDiv.classList.remove('hidden');
+      } else {
+        salahDiv.classList.add('hidden');
+        currentTilt = 0;
+      }
+
+      updateTelemetry();
+    }
+
+    // Salah Posture Switcher
+    function setSalahPosture(posture, angle) {
+      salahPosture = posture;
+      currentTilt = angle;
+      const titleMap = {
+        standing: "Standing (0°)",
+        ruku: "Bowing / Ruku (90°)",
+        sujud: "Prostration / Sujud (180°)"
+      };
+      document.getElementById('postureTitle').innerText = titleMap[posture];
+      updateTelemetry();
+    }
+
+    // Update Telemetry, Dials, and Text
+    function updateTelemetry() {
+      const cfg = conditions[currentCondition];
+
+      // Calculate Dynamic HR
+      let tiltEffect = 0;
+      if (currentCondition === 'salah') {
+        tiltEffect = (currentTilt === 180) ? -8.5 * elasticity : (currentTilt === 90 ? -4.0 * elasticity : 0);
+      }
+      currentBpm = baseHeartRate + (cfg.hrOffset * elasticity) + tiltEffect;
+      
+      // Calculate RMSSD & Coherence adjusted by age
+      const dynRmssd = (cfg.rmssdBase * elasticity).toFixed(1);
+      const dynCoh = (cfg.cohBase * Math.min(1.0, elasticity + 0.15)).toFixed(3);
+      
+      // Vagal & Sympathetic percentages
+      const vagalPct = Math.min(100, Math.max(10, cfg.vagalFactor * elasticity * 100)).toFixed(1);
+      const sympPct = Math.min(100, Math.max(10, cfg.sympFactor * 100)).toFixed(1);
+
+      // DOM Updates
+      document.getElementById('hrBadge').innerText = `${currentBpm.toFixed(1)} BPM`;
+      document.getElementById('hrBadge').className = `text-sm font-mono font-bold px-3 py-1 rounded-full border ${cfg.borderColor} text-white`;
+      document.getElementById('statHr').innerHTML = `${currentBpm.toFixed(1)} <span class="text-[10px] font-normal text-slate-400">bpm</span>`;
+      document.getElementById('statRmssd').innerText = `${dynRmssd} ms`;
+      document.getElementById('statCoh').innerText = dynCoh;
+      document.getElementById('statTilt').innerText = `${currentTilt}°`;
+
+      document.getElementById('vagusScore').innerText = `${vagalPct}%`;
+      document.getElementById('sympScore').innerText = `${sympPct}%`;
+
+      // Needles rotation (-90deg to +90deg)
+      const vAngle = -90 + (vagalPct / 100) * 180;
+      const sAngle = -90 + (sympPct / 100) * 180;
+      document.getElementById('vagusNeedle').style.transform = `rotate(${vAngle}deg)`;
+      document.getElementById('sympNeedle').style.transform = `rotate(${sAngle}deg)`;
+
+      // Update Heart Color & Glow
+      const heartSvg = document.getElementById('heartSvg');
+      heartSvg.style.color = cfg.color;
+
+      document.getElementById('mechTitle').innerText = cfg.mechTitle;
+      document.getElementById('mechTitle').className = `font-bold ${cfg.color}`;
+      document.getElementById('mechDesc').innerText = cfg.mechDesc;
+    }
+
+    // -------------------------------------------------------------------------
+    // REAL-TIME PULSING HEART & CONTINUOUS ECG OSCILLOSCOPE ANIMATION LOOP
+    // -------------------------------------------------------------------------
+    let lastBeatTime = performance.now();
+    let simTime = 0;
+    const canvas = document.getElementById('ecgCanvas');
+    const ctx = canvas.getContext('2d');
+    const ecgPoints = [];
+    const maxPoints = 620;
+
+    // Fill initial canvas buffer
+    for (let i = 0; i < maxPoints; i++) ecgPoints.push(95);
+
+    function animationLoop(timestamp) {
+      const beatInterval = (60.0 / currentBpm) * 1000; // ms per beat
+      const elapsedSinceBeat = timestamp - lastBeatTime;
+      const heartSvg = document.getElementById('heartSvg');
+
+      // Heart contraction pulse
+      if (elapsedSinceBeat > beatInterval) {
+        lastBeatTime = timestamp;
+      }
+      const beatPhase = (elapsedSinceBeat % beatInterval) / beatInterval;
+      
+      // Contraction Scale
+      let scale = 1.0;
+      if (beatPhase < 0.18) {
+        // Systole contraction (sharp pulse)
+        scale = 1.0 + 0.18 * Math.sin((beatPhase / 0.18) * Math.PI) * elasticity;
+      } else {
+        // Diastole relaxation
+        scale = 1.0;
+      }
+      heartSvg.style.transform = `scale(${scale})`;
+
+      // Generate ECG Voltage Point
+      simTime += 0.02;
+      let ecgVolt = 95; // Baseline middle (height is 190)
+
+      const phase = (elapsedSinceBeat / beatInterval);
+      if (phase >= 0.10 && phase < 0.16) {
+        // P-wave
+        ecgVolt -= 12 * Math.sin(((phase - 0.10) / 0.06) * Math.PI);
+      } else if (phase >= 0.20 && phase < 0.22) {
+        // Q-dip
+        ecgVolt += 15;
+      } else if (phase >= 0.22 && phase < 0.26) {
+        // R-PEAK (Sharp spike up)
+        ecgVolt -= 78;
+      } else if (phase >= 0.26 && phase < 0.29) {
+        // S-dip
+        ecgVolt += 22;
+      } else if (phase >= 0.38 && phase < 0.52) {
+        // T-wave
+        ecgVolt -= 20 * Math.sin(((phase - 0.38) / 0.14) * Math.PI);
+      } else {
+        // Inter-beat noise
+        const noise = (currentCondition === 'music') ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 1.5;
+        ecgVolt += noise;
+      }
+
+      // Add to buffer
+      ecgPoints.push(ecgVolt);
+      if (ecgPoints.length > maxPoints) ecgPoints.shift();
+
+      // Render Oscilloscope
+      ctx.fillStyle = "#030712";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Grid Lines
+      ctx.strokeStyle = "rgba(16, 185, 129, 0.08)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 25) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 25) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // Draw ECG Lead II Green Trace
+      const cfg = conditions[currentCondition];
+      ctx.strokeStyle = cfg.color;
+      ctx.lineWidth = 2.2;
+      ctx.shadowColor = cfg.color;
+      ctx.shadowBlur = 8;
+
+      ctx.beginPath();
+      for (let i = 0; i < ecgPoints.length; i++) {
+        if (i === 0) ctx.moveTo(i, ecgPoints[i]);
+        else ctx.lineTo(i, ecgPoints[i]);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Sweep Head
+      const lastX = ecgPoints.length - 1;
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(lastX, ecgPoints[lastX], 3, 0, 2 * Math.PI);
+      ctx.fill();
+
+      requestAnimationFrame(animationLoop);
+    }
+
+    // Initialize
+    setCondition('quran');
+    requestAnimationFrame(animationLoop);
+  </script>
+
+</body>
+</html>
