@@ -33,11 +33,14 @@ The framework integrates:
 ### Figure 2: In-Vivo Accelerometer & Dual-Lead ECG Telemetry across Salah Postures
 ![Salat Kinematics](figures/figure2_salat_kinematics_eda.png)
 
-### Figure 3: Age-Stratified Cardiac Resilience Across the Human Lifespan (18 to 85 Years)
+### Figure 3: Age & Gender Demographic Invariance Across the Lifespan (18 to 85 Years)
 ![Age Stratified Impact](figures/figure3_age_cardiac_impact.png)
 
-### Figure 4: Prospective Hospital IRB Clinical Pilot Trial Protocol
-![Clinical Trial Design](figures/figure4_clinical_trial_protocol.png)
+### Figure 4: Official 300-Round GPU Machine Learning Leaderboard (Zero Data Leakage)
+![300-Round GPU Benchmark](figures/figure4_gpu_benchmark_300rounds.png)
+
+### Figure 5: Prospective Hospital IRB Clinical Pilot Trial Protocol & CONSORT Design
+![Clinical Trial Protocol](figures/figure5_clinical_trial_protocol.png)
 
 ---
 
