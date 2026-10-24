@@ -1,0 +1,5 @@
+Condition (60 min/day x 365 days),AI Discovered Delta HR,AI Discovered Delta RMSSD,Daily Myocardial Shift,Annual Myocardial Workload,AI Biological Heart Age Shift
+TV_Sedentary,+2.36 bpm,-0.85 ms,+141 beats/day,+0.052 Million Beats,+0.01 Years
+Song_Transient,+7.79 bpm,-1.28 ms,+467 beats/day,+0.171 Million Beats,+0.04 Years
+Quran_Harmonic,-2.62 bpm,+1.24 ms,-157 beats/day,-0.057 Million Beats,-0.01 Years
+Salah_Kinesthetic,-4.76 bpm,+0.78 ms,-286 beats/day,-0.104 Million Beats,-0.03 Years

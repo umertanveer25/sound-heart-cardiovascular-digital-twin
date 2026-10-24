@@ -42,6 +42,9 @@ The framework integrates:
 ### Figure 5: Prospective Hospital IRB Clinical Pilot Trial Protocol & CONSORT Design
 ![Clinical Trial Protocol](figures/figure5_clinical_trial_protocol.png)
 
+### Figure 6: Autonomous AI 365-Day Dynamic Simulation (1 Hour/Day Cumulative Myocardial Workload)
+![365-Day Simulation](figures/figure6_unbiased_dynamic_365day_1hour_study.png)
+
 ---
 
 ## 📊 Benchmark Results & Empirical Discoveries
@@ -89,8 +92,13 @@ Salah_Kinesthetic     -4.64 bpm        +0.74 ms  Restorative Baroreflex (+2.06 Y
 ├── paper/
 │   ├── manuscript.md                    # Camera-ready academic manuscript (3,500 words)
 │   └── journal_submission_package.md    # Editorial cover letter, highlights & declarations
+├── data/
+│   └── master_contemplative_10400_epochs.csv # 10,400 clinical time-series epochs
+├── results/
+│   └── table_unbiased_365day_1hour_summary.csv # Exported 365-day trajectory metrics
 ├── src/
-│   └── pacemaker_ode.py                 # Extended McSharry biophysical dynamical equations
+│   ├── pacemaker_ode.py                 # Extended McSharry biophysical dynamical equations
+│   └── simulate_365day_dynamic_cardiac_engine.py # Reproducible 365-day dynamic simulator
 ├── LICENSE                              # MIT Open-Source License
 ├── README.md                            # Comprehensive documentation
 └── requirements.txt                     # Pinned dependencies
