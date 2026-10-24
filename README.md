@@ -138,9 +138,20 @@ python src/simulate_epigenetic_molecular_validation.py --subjects 100 --seed 42
 │   ├── figure5_clinical_trial_protocol.png
 │   ├── figure6_unbiased_dynamic_365day_1hour_study.png
 │   └── figure7_epigenetic_molecular_validation.png
-├── paper/                              # Academic Manuscript & Submissions
-│   ├── manuscript.md                   # Camera-ready academic manuscript (3,500 words)
-│   └── journal_submission_package.md   # Editorial cover letter, highlights & declarations
+├── paper/                              # Academic Manuscripts & Journal Packages
+│   ├── paper1_biophysical_cardiac_digital_twin/ # Target: IEEE Trans. Biomed. Eng.
+│   │   ├── manuscript_paper1.md        # Full 3,500+ word camera-ready paper
+│   │   └── submission_package_paper1.md # Editorial cover letter & highlights
+│   └── paper2_epigenetic_molecular_longevity/   # Target: Aging Cell / Nature Aging
+│       ├── manuscript_paper2.md        # Full 3,500+ word multi-omic paper
+│       ├── submission_package_paper2.md # Editorial cover letter & reviewer list
+│       ├── generate_paper2_figures.py  # Standalone figure generation engine
+│       └── figures/                    # 5 Dedicated 300-DPI Publication Figures
+│           ├── figure1_molecular_trial_consort_protocol.png
+│           ├── figure2_cholinergic_antiinflammatory_crp_cortisol.png
+│           ├── figure3_dnam_grimage_horvath_deaging.png
+│           ├── figure4_telomere_length_preservation.png
+│           └── figure5_crossmodal_cardiac_epigenetic_coupling.png
 ├── results/                            # Tabular Metrics
 │   ├── table_unbiased_365day_1hour_summary.csv # 365-day trajectory metrics
 │   └── table_epigenetic_molecular_biomarkers.csv # Multi-omic assay summary
