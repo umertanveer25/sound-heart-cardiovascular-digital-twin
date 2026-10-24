@@ -1,0 +1,9 @@
+Metric,Quran_Mean,Song_Mean,Quran_vs_Song_t,Quran_vs_Song_p,Quran_vs_Song_Cohens_d,Salah_Mean,TV_Mean,Salah_vs_TV_t,Salah_vs_TV_p,Salah_vs_TV_Cohens_d
+Heart_Rate_bpm,87.53,97.99,-46.48,1.28e-58,-10.39,85.48,92.4,-38.63,1.29e-52,-8.64
+RMSSD_ms,194.69,192.18,12.74,9.39e-21,2.85,194.18,192.55,9.09,7.08e-14,2.03
+Mayer_Power_010Hz,0.94,0.18,183.9,1.18e-104,41.12,0.88,0.32,120.73,1.89e-90,27.0
+Frontal_Theta_uV2,19.54,7.09,70.53,2.06e-72,15.77,16.75,10.07,41.29,9.21e-55,9.23
+Parietal_Alpha_uV2,27.24,8.09,92.94,1.19e-81,20.78,24.03,13.95,53.21,4.59e-63,11.9
+FAA_Index,0.49,-0.34,107.93,1.12e-86,24.13,0.39,-0.05,71.97,4.36e-73,16.09
+Cerebral_MCA_Velocity_cms,4.51,3.18,7.8,2.27e-11,1.74,22.25,-0.91,98.08,1.86e-83,21.93
+Transfer_Entropy_Heart_to_Brain,4.34,3.78,67.95,3.58e-71,15.19,4.28,3.88,52.1,2.29e-62,11.65

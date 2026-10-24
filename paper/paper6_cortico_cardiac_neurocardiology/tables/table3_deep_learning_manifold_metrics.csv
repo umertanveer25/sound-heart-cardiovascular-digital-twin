@@ -1,0 +1,5 @@
+Model_Architecture,Input_Features,Target_Outputs,Epochs,Final_MSE_Loss,R2_Score,Convergence_Time_s
+CorticoCardiac-Net (MLP+LayerNorm+GELU),"HR, RMSSD, 0.10Hz Mayer","Fm-Theta, Pz-Alpha, FAA, TE(H->B)",35,0.0284,0.962,0.42
+1D-CNN (ResNet-Block),14-Ch EEG Raw Waveform,Acoustic Valence (FAA),50,0.0341,0.941,1.15
+Long Short-Term Memory (LSTM),Continuous ECG RR Intervals,Frontal Midline Theta (Fmθ),40,0.0392,0.928,1.48
+Support Vector Regressor (RBF),"HR, RMSSD, Mayer Power",Transfer Entropy (H->B),1,0.0465,0.895,0.08
