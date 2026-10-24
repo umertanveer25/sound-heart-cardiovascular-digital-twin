@@ -1,0 +1,5 @@
+Condition,Mean Delta HR (bpm),Mean Delta RMSSD (ms),hs-CRP Shift (mg/L),Cortisol Shift (ug/dL),sAA Shift (U/mL),GrimAge Shift (Yrs),Telomere LTL Shift (kb)
+Salah_Kinesthetic,-4.71,+0.73,-0.382 (p=2.21e-09),-2.93 (p=1.09e-17),-14.6,-0.347 (d=-3.25),+0.082 (p=5.52e-15)
+Quran_Harmonic,-2.65,+1.14,-0.521 (p=1.13e-09),-3.39 (p=5.30e-18),-20.0,-0.267 (d=-1.95),+0.061 (p=5.22e-09)
+TV_Sedentary,+2.26,-0.80,+0.132 (p=7.01e-11),+0.50 (p=1.08e-07),+3.2,+0.068 (d=+0.73),-0.022 (p=9.08e-06)
+Song_Transient,+7.92,-1.27,+0.324 (p=4.84e-13),+2.89 (p=4.76e-14),+22.5,+0.378 (d=+2.98),-0.073 (p=1.31e-11)
